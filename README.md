@@ -20,11 +20,7 @@ The application consists of a React frontend developed with Vite, located in the
 
 ## Installation
 
-<<<<<<< HEAD
 1. Clone the repository: `git clone https://github.com/DevBammy/Realtorz.git`
-=======
-1. Clone the repository: `git clone https://github.com/DevBammy/Realtorz`
->>>>>>> 2a29c1ddd9bc8c71e3c003755534ffe79a4929dc
 2. Navigate to the project directory: `realtorz`
 3. Install dependencies:
    - For frontend: `cd client && npm install`
