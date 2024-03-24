@@ -1,8 +1,10 @@
+import React from 'react';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { app } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/features/userSlice';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const OAuth = () => {
   const nav = useNavigate();
@@ -20,7 +22,7 @@ const OAuth = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: result.user.displayName,
+          username: result.user.displayName,
           email: result.user.email,
           photo: result.user.photoURL,
         }),
@@ -28,6 +30,7 @@ const OAuth = () => {
       const data = await res.json();
       dispatch(signInSuccess(data));
       nav('/');
+      toast.success('Welcome!');
     } catch (error) {
       console.log(error);
     }

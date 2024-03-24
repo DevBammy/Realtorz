@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_APP,
+  apiKey: 'AIzaSyBJCz5okHaPbPPasVUB5LQ3XmGOo0RHN_c',
   authDomain: 'realtorz-web-app.firebaseapp.com',
   projectId: 'realtorz-web-app',
   storageBucket: 'realtorz-web-app.appspot.com',
