@@ -6,6 +6,11 @@ import jwt from 'jsonwebtoken';
 // Create a user account
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    next(errorHandler(501, 'Fields cannot be empty'));
+  }
+
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({ username, email, password: hashedPassword });
 
@@ -13,14 +18,14 @@ export const signup = async (req, res, next) => {
     await newUser.save();
     res.status(201).json('user created successfully');
   } catch (error) {
-    // next(errorHandler(550, 'Internal Server Error'));
-    next(error);
+    next(errorHandler(550, 'Wrong credentials'));
   }
 };
 
 // Sign user in
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
+
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(401, 'Wrong credential'));

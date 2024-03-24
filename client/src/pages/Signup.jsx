@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const nav = useNavigate();
 
@@ -30,20 +29,20 @@ const Signup = () => {
       const data = await res.json();
       if (data.success === false) {
         setIsLoading(false);
-        setError(data.message);
+        toast.error(data.message);
         return;
       }
       setIsLoading(false);
-      setError(null);
+      toast.success('Welcome, Sign in to you account');
       nav('/signin');
     } catch (error) {
       setIsLoading(false);
-      setError(error.message);
+      toast.error(error.message);
     }
   };
 
   return (
-    <div className="p-3 w-max-lg mx-auto">
+    <div className="p-3 w-max-lg sm:w-[500px] mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">SignUp</h1>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -85,8 +84,6 @@ const Signup = () => {
           </Link>
         </p>
       </div>
-
-      {error && <p className="text-red-600 mt-5">{error}</p>}
     </div>
   );
 };

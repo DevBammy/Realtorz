@@ -9,10 +9,9 @@
     "start": "node api/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Emmanuel Bamidele",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
