@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   return (
     <>
       <header className="bg-slate-200 shadow-md">
@@ -35,11 +40,20 @@ const Header = () => {
               </li>
             </Link>
 
-            <Link to="/signin">
-              <li className="hidden font-bold text-slate-500 sm:inline hover:text-blue-600 cursor-pointer">
-                Sign In
-              </li>
-            </Link>
+            {user ? (
+              <img
+                src={user.photo}
+                alt="user profile image"
+                className="w-10 h-10 rounded-full cursor-pointer object-cover"
+                onClick={() => navigate('/profile')}
+              />
+            ) : (
+              <Link to="/signin">
+                <li className="hidden font-bold text-slate-500 sm:inline hover:text-blue-600 cursor-pointer">
+                  Sign In
+                </li>
+              </Link>
+            )}
           </ul>
         </div>
       </header>
