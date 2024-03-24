@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/features/userSlice';
 import toast from 'react-hot-toast';
+import OAuth from '../components/OAuth';
 
 const Signin = () => {
   const [formData, setFormData] = useState({});
@@ -72,6 +73,7 @@ const Signin = () => {
         >
           {isLoading ? 'Signing you in...' : 'Sign In'}
         </button>
+        <OAuth />
       </form>
 
       <div className="flex gap-2 mt-5">
