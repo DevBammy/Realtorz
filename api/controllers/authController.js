@@ -7,10 +7,6 @@ import jwt from 'jsonwebtoken';
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
-  if (!username || !email || !password) {
-    next(errorHandler(501, 'Fields cannot be empty'));
-  }
-
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({ username, email, password: hashedPassword });
 

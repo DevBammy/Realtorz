@@ -73,7 +73,7 @@ const Signin = () => {
         >
           {isLoading ? 'Signing you in...' : 'Sign In'}
         </button>
-        <OAuth />
+        {/* <OAuth /> */}
       </form>
 
       <div className="flex gap-2 mt-5">

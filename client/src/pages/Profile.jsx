@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import {
@@ -7,8 +7,10 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
+import { updateUserSuccess, logUserOut } from '../redux/features/userSlice';
 import { app } from '../../firebase';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -16,6 +18,9 @@ const Profile = () => {
   const [file, setFile] = useState(undefined);
   const [fileProgress, setFileProgress] = useState(0);
   const [formData, setFormData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   useEffect(() => {
     if (file) {
@@ -23,12 +28,12 @@ const Profile = () => {
     }
   }, [file]);
 
-  // const handleChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.id]: e.target.value,
-  //   });
-  // };
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -43,9 +48,6 @@ const Profile = () => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
         setFileProgress(progress);
-        if (fileProgress <= 100) {
-          toast.success('Uploading file...');
-        }
       },
       (error) => {
         toast.error(error);
@@ -59,10 +61,48 @@ const Profile = () => {
     );
   };
 
+  // handle update profile
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await fetch(`/api/user/update/${user._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setIsLoading(false);
+        toast.error(data.message);
+        return;
+      } else {
+        dispatch(updateUserSuccess(data));
+        setIsLoading(false);
+        toast.success('Profile updated successfully!');
+      }
+    } catch (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  // signUserOut
+  const signOut = () => {
+    dispatch(logUserOut());
+    navigator('/');
+    toast.success('Signed out successfully!');
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Profile</h1>
-      <form className="flex flex-col gap-2 items-center w-full">
+      <form
+        onSubmit={handleUpdate}
+        className="flex flex-col gap-2 items-center w-full"
+      >
         <input
           type="file"
           ref={fileRef}
@@ -94,6 +134,7 @@ const Profile = () => {
           className="border p-3 rounded-lg  w-max-lg w-full"
           id="username"
           defaultValue={user.username}
+          onChange={handleChange}
         />
 
         <input
@@ -102,6 +143,7 @@ const Profile = () => {
           className="border p-3 rounded-lg  w-max-lg w-full"
           id="email"
           defaultValue={user.email}
+          onChange={handleChange}
         />
 
         <input
@@ -110,14 +152,21 @@ const Profile = () => {
           className="border p-3 rounded-lg  w-max-lg w-full"
           id="password"
           defaultValue={user.password}
+          onChange={handleChange}
         />
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80 w-full">
-          Update Profile
+        <button
+          type="submit"
+          className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80 w-full"
+        >
+          {isLoading ? 'Updating...' : 'Update Profile'}
         </button>
       </form>
 
       <div className="flex justify-between items-center my-2">
-        <span className="font-bold text-slate-500 cursor-pointer">
+        <span
+          onClick={signOut}
+          className="font-bold text-slate-500 cursor-pointer"
+        >
           Sign Out
         </span>
         <span className="text-red-500 font-medium cursor-pointer">
