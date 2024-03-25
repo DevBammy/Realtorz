@@ -90,10 +90,19 @@ const Profile = () => {
   };
 
   // signUserOut
-  const signOut = () => {
-    dispatch(logUserOut());
-    navigator('/');
-    toast.success('Signed out successfully!');
+  const signOut = async () => {
+    try {
+      const res = await fetch('/api/auth/logout');
+      const data = await res.json();
+      if (data.success === false) {
+        return;
+      }
+      dispatch(logUserOut());
+      navigator('/');
+      toast.success('Signed out successfully!');
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

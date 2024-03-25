@@ -41,6 +41,7 @@ export const signin = async (req, res, next) => {
   }
 };
 
+//Google sign in handler
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -77,6 +78,16 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(userWithoutPassword);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Sign user out
+export const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Logged out successfully' });
   } catch (error) {
     next(error);
   }
