@@ -10,7 +10,7 @@ import {
 import { updateUserSuccess, logUserOut } from '../redux/features/userSlice';
 import { app } from '../../firebase';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -170,6 +170,13 @@ const Profile = () => {
           {isLoading ? 'Updating...' : 'Update Profile'}
         </button>
       </form>
+      <Link
+        to="/create-listing"
+        type="button"
+        className="bg-green-600 text-white rounded-lg p-3 mt-4 text-center uppercase hover:opacity-90 disabled:opacity-80 w-full"
+      >
+        {isLoading ? 'Updating...' : 'Update Profile'}
+      </Link>
 
       <div className="flex justify-between items-center my-2">
         <span
