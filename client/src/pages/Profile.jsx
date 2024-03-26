@@ -11,7 +11,8 @@ import { updateUserSuccess, logUserOut } from '../redux/features/userSlice';
 import { app } from '../../firebase';
 import toast from 'react-hot-toast';
 import { useNavigate, Link } from 'react-router-dom';
-import Userlistings from '../components/UserListings';
+import { FiEdit } from 'react-icons/fi';
+import { RiDeleteBinLine } from 'react-icons/ri';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -123,6 +124,10 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {
+    handleListing();
+  }, []);
+
   const handleListing = async () => {
     try {
       const res = await fetch(`/api/user/listings/${user._id}`);
@@ -138,9 +143,11 @@ const Profile = () => {
   };
 
   return (
-    <div className="p-3 max-w-6xl mx-auto flex gap-3">
+    <div className="relative p-3 max-w-6xl mx-auto flex gap-6">
       <div className="w-1/3 flex flex-col justify-center ">
-        <h1 className="text-3xl text-center font-semibold my-7">Profile</h1>
+        <h1 className="text-3xl text-center font-semibold my-7">
+          Profile Details
+        </h1>
         <form
           onSubmit={handleUpdate}
           className="flex flex-col gap-2 items-center w-full"
@@ -233,7 +240,38 @@ const Profile = () => {
             Your Listings
           </h1>
         </div>
-        <Userlistings handleListing={handleListing} listings={listings} />
+        <div className="">
+          {listings &&
+            listings.length > 0 &&
+            listings.map((listing, i) => (
+              <div
+                key={i}
+                className="flex justify-between items-center p-2 rounded-lg bg-slate-200 my-2 shadow"
+              >
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="h-32 w-60  p-2 "
+                >
+                  <img
+                    src={listing.imgUrls[0]}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </Link>
+                <Link to={`/listing/${listing._id}`}>
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex items-center gap-4">
+                  <button className="font-bold text-white cursor-pointer bg-red-700 p-2 ">
+                    <FiEdit />
+                  </button>
+                  <button className="font-bold text-white cursor-pointer bg-red-700 p-2 ">
+                    <RiDeleteBinLine />
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

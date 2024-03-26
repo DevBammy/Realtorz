@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 const Listing = () => {
   const [files, setFiles] = useState();
   const [formData, setFormData] = useState({
-    imageUrls: [],
+    imgUrls: [],
     name: '',
     description: '',
     address: '',
@@ -30,7 +30,7 @@ const Listing = () => {
 
   const handleImageUplaod = (e) => {
     setIsLoading(true);
-    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+    if (files.length > 0 && files.length + formData.imgUrls.length < 7) {
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
@@ -40,7 +40,7 @@ const Listing = () => {
         .then((urls) => {
           setFormData({
             ...formData,
-            imageUrls: formData.imageUrls.concat(urls),
+            imgUrls: formData.imgUrls.concat(urls),
           });
           setIsLoading(false);
           toast.success('Images uploaded successfully');
@@ -83,7 +83,7 @@ const Listing = () => {
   const handleDelete = (i) => {
     setFormData({
       ...formData,
-      imageUrls: formData.imageUrls.filter((_, index) => index !== i),
+      imgUrls: formData.imgUrls.filter((_, index) => index !== i),
     });
     toast.success('image removed');
   };
@@ -117,7 +117,7 @@ const Listing = () => {
   const handleSubmitListing = async (e) => {
     e.preventDefault();
     try {
-      if (formData.imageUrls.length < 1)
+      if (formData.imgUrls.length < 1)
         return toast.error('Please upload atleast one image');
       if (+formData.regularPrice < +formData.discountedPrice)
         return toast.error(
@@ -312,7 +312,7 @@ const Listing = () => {
             <input
               className="p-3 border border-gray-300 rounded w-full"
               type="file"
-              id="images"
+              id="imgUrls"
               accept="image/*"
               multiple
               onChange={(e) => setFiles(e.target.files)}
@@ -327,8 +327,8 @@ const Listing = () => {
           </div>
 
           <div className=" grid grid-cols-3 gap-2 w-full my-4">
-            {formData.imageUrls.length > 0 &&
-              formData.imageUrls.map((image, i) => (
+            {formData.imgUrls.length > 0 &&
+              formData.imgUrls.map((image, i) => (
                 <div className="flex flex-col gap-2" key={i}>
                   <img
                     src={image}

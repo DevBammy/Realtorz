@@ -14,7 +14,7 @@ const Userlistings = ({ handleListing, listings }) => {
             key={i}
             className="flex justify-between items-center p-3 border-b"
           >
-            <img src={listing.imgUrls[0]} alt="" />
+            {/* <img src={listing.imgUrls[0]} alt="" /> */}
           </div>
         ))}
     </>
