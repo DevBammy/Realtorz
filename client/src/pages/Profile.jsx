@@ -105,6 +105,22 @@ const Profile = () => {
     }
   };
 
+  const deleteUser = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${user._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        toast.error(data.message);
+        dispatch(logUserOut());
+        return;
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Profile</h1>
@@ -185,7 +201,10 @@ const Profile = () => {
         >
           Sign Out
         </span>
-        <span className="text-red-500 font-medium cursor-pointer">
+        <span
+          onClick={deleteUser}
+          className="text-red-500 font-medium cursor-pointer"
+        >
           Delete Account
         </span>
       </div>
