@@ -21,7 +21,7 @@ const Listing = () => {
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
-        promises.push(storeImage(files[1]));
+        promises.push(storeImage(files[i]));
       }
       Promise.all(promises)
         .then((urls) => {
@@ -65,6 +65,14 @@ const Listing = () => {
         }
       );
     });
+  };
+
+  const handleDelete = (i) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, index) => index !== i),
+    });
+    toast.success('image removed');
   };
 
   return (
@@ -201,6 +209,26 @@ const Listing = () => {
               {isLoading ? 'Uploading...' : 'Upload'}
             </button>
           </div>
+
+          <div className=" grid grid-cols-3 gap-2 w-full my-4">
+            {formData.imageUrls.length > 0 &&
+              formData.imageUrls.map((image, i) => (
+                <div className="flex flex-col gap-2" key={i}>
+                  <img
+                    src={image}
+                    alt="listing image"
+                    className="w-40 h-40 object-cover rounded-lg "
+                  />
+                  <span
+                    onClick={() => handleDelete(i)}
+                    className="font-semibold text-red-500"
+                  >
+                    Delete
+                  </span>
+                </div>
+              ))}
+          </div>
+
           <button
             className=" p-3 bg-slate-700 text-white rounded-lg mt-4 hover:opacity-90 disabled:opacity-70"
             type="submit"
