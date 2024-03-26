@@ -20,6 +20,7 @@ const Profile = () => {
   const [fileProgress, setFileProgress] = useState(0);
   const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [listings, setListings] = useState([]);
   const dispatch = useDispatch();
   const navigator = useNavigate();
 
@@ -122,6 +123,20 @@ const Profile = () => {
     }
   };
 
+  const handleListing = async () => {
+    try {
+      const res = await fetch(`/api/user/listings/${user._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        toast.error(data.message);
+        return;
+      }
+      setListings(data);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
   return (
     <div className="p-3 max-w-6xl mx-auto flex gap-3">
       <div className="w-1/3 flex flex-col justify-center ">
@@ -193,7 +208,7 @@ const Profile = () => {
           type="button"
           className="bg-green-600 text-white rounded-lg p-3 mt-4 text-center uppercase hover:opacity-90 disabled:opacity-80 w-full"
         >
-          {isLoading ? 'Updating...' : 'Update Profile'}
+          Create Listing
         </Link>
 
         <div className="flex justify-between items-center my-2">
@@ -213,10 +228,12 @@ const Profile = () => {
       </div>
 
       <div className="flex-1 w-2/3">
-        <h1 className="text-3xl text-center font-semibold my-7">
-          Your Listings
-        </h1>
-        <Userlistings />
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl text-center font-semibold my-7">
+            Your Listings
+          </h1>
+        </div>
+        <Userlistings handleListing={handleListing} listings={listings} />
       </div>
     </div>
   );

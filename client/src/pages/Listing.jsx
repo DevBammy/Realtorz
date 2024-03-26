@@ -141,7 +141,7 @@ const Listing = () => {
       navigate(`/listing/${data._id}`);
       toast.success('Listing created succesfully! Redirecting...');
       setLoading(false);
-      // navigate('/');
+      navigate('/profile');
     } catch (error) {
       toast.error('Error creating listing');
       setLoading(false);
