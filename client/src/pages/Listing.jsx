@@ -123,8 +123,8 @@ const Listing = () => {
         return toast.error(
           'regular price should be less than discounted price'
         );
-      if (+formData.regularPrice === 0 || +formData.discountedPrice === 0)
-        return toast.error('regular price and discounted price cannot be zero');
+      if (+formData.regularPrice === 0)
+        return toast.error('regular price cannot be zero');
       setLoading(true);
       const res = await fetch('api/listing/create', {
         method: 'POST',
@@ -138,6 +138,7 @@ const Listing = () => {
         toast.error(data.message);
         setLoading(false);
       }
+      navigate(`/listing/${data._id}`);
       toast.success('Listing created succesfully! Redirecting...');
       setLoading(false);
       // navigate('/');
@@ -280,20 +281,22 @@ const Listing = () => {
                 <span className="text-[12px]">($/Month)</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                id="discountedPrice"
-                required
-                onChange={handleChange}
-                value={formData.discountedPrice}
-                className="p-3 border border-gray-300 rounded-lg"
-              />
-              <div className="flex flex-col items-center">
-                <p>Discounted Price </p>
-                <span className="text-[12px]">($/Month)</span>
+            {formData.offer && (
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  id="discountedPrice"
+                  required
+                  onChange={handleChange}
+                  value={formData.discountedPrice}
+                  className="p-3 border border-gray-300 rounded-lg"
+                />
+                <div className="flex flex-col items-center">
+                  <p>Discounted Price </p>
+                  <span className="text-[12px]">($/Month)</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -343,6 +346,7 @@ const Listing = () => {
           </div>
 
           <button
+            disabled={loading || isLoading}
             className=" p-3 bg-slate-700 text-white rounded-lg mt-4 hover:opacity-90 disabled:opacity-70"
             type="submit"
           >
