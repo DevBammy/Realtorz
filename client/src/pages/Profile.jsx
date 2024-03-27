@@ -285,16 +285,17 @@ const Profile = () => {
                     className="h-full w-full object-cover"
                   />
                 </Link>
-                <Link to={`/listing/${listing._id}`}>
+                <Link to={`/edit-listing/${listing._id}`}>
                   <p>{listing.name}</p>
                 </Link>
                 <div className="flex items-center gap-4">
-                  <button
+                  {/* <Link
+                    to={`/edit-listing/${listing._id}`}
                     type="button"
                     className="font-bold text-white cursor-pointer bg-red-700 p-2 "
                   >
                     <FiEdit />
-                  </button>
+                  </Link> */}
                   <button
                     onClick={() => handleDeleteListing(listing._id)}
                     type="button"

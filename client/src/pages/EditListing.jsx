@@ -5,12 +5,12 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { app } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const Listing = () => {
+const EditListing = () => {
   const [files, setFiles] = useState();
   const [formData, setFormData] = useState({
     imgUrls: [],
@@ -27,10 +27,46 @@ const Listing = () => {
     furnished: false,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      const id = params.id;
+      const res = await fetch(`/api/listing/get/${id}`);
+      const data = res.json();
+      if (data.success === false) {
+        toast.error(data.message);
+        return;
+      }
+      setFormData({
+        ...formData,
+        name: data.name,
+        description: data.description,
+        address: data.address,
+        type: data.type,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        regularPrice: data.regularPrice,
+        discountedPrice: data.discountedPrice,
+        offer: data.offer,
+        parking: data.parking,
+        furnished: data.furnished,
+        imgUrls: data.imgUrls,
+      });
+    };
+
+    fetchListing();
+  }, []);
 
   const handleImageUplaod = (e) => {
     setIsLoading(true);
-    if (files.length > 0 && files.length + formData.imgUrls.length < 7) {
+    if (
+      files &&
+      files.length > 0 &&
+      files.length + formData.imgUrls.length < 7
+    ) {
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
@@ -110,9 +146,6 @@ const Listing = () => {
     }
   };
 
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
   const { user } = useSelector((state) => state.user);
   const handleSubmitListing = async (e) => {
     e.preventDefault();
@@ -126,7 +159,7 @@ const Listing = () => {
       if (+formData.regularPrice === 0)
         return toast.error('regular price cannot be zero');
       setLoading(true);
-      const res = await fetch('api/listing/create', {
+      const res = await fetch(`api/listing/update/${params.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,7 +184,7 @@ const Listing = () => {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create Listing
+        Update Listing Details
       </h1>
 
       <form
@@ -322,12 +355,13 @@ const Listing = () => {
               onClick={handleImageUplaod}
               className="p-3 text-white border-0 outline-0  my-4 bg-green-700 rounded uppercase hover:opacity-90 disabled:opacity-70"
             >
-              {isLoading ? 'Uploading...' : 'Upload'}
+              {isLoading ? 'Updating...' : 'Update'}
             </button>
           </div>
 
           <div className=" grid grid-cols-3 gap-2 w-full my-4">
-            {formData.imgUrls.length > 0 &&
+            {formData &&
+              formData.imgUrls.length > 0 &&
               formData.imgUrls.map((image, i) => (
                 <div className="flex flex-col gap-2" key={i}>
                   <img
@@ -350,7 +384,7 @@ const Listing = () => {
             className=" p-3 bg-slate-700 text-white rounded-lg mt-4 hover:opacity-90 disabled:opacity-70"
             type="submit"
           >
-            {loading ? 'Creating...' : 'Create Listing'}
+            {loading ? 'Updating...' : 'Update Listing'}
           </button>
         </div>
       </form>
@@ -358,4 +392,4 @@ const Listing = () => {
   );
 };
 
-export default Listing;
+export default EditListing;
