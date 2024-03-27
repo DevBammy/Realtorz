@@ -11,7 +11,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const EditListing = () => {
+  const { user } = useSelector((state) => state.user);
   const [files, setFiles] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const params = useParams();
   const [formData, setFormData] = useState({
     imgUrls: [],
     name: '',
@@ -26,47 +31,25 @@ const EditListing = () => {
     parking: false,
     furnished: false,
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const params = useParams();
 
   useEffect(() => {
     const fetchListing = async () => {
       const id = params.id;
       const res = await fetch(`/api/listing/get/${id}`);
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
-        toast.error(data.message);
+        console.log(data.message);
         return;
       }
-      setFormData({
-        ...formData,
-        name: data.name,
-        description: data.description,
-        address: data.address,
-        type: data.type,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-        regularPrice: data.regularPrice,
-        discountedPrice: data.discountedPrice,
-        offer: data.offer,
-        parking: data.parking,
-        furnished: data.furnished,
-        imgUrls: data.imgUrls,
-      });
+      setFormData(data);
     };
 
     fetchListing();
   }, []);
 
   const handleImageUplaod = (e) => {
-    setIsLoading(true);
-    if (
-      files &&
-      files.length > 0 &&
-      files.length + formData.imgUrls.length < 7
-    ) {
+    if (files.length > 0 && files.length + formData.imgUrls.length < 7) {
+      setIsLoading(true);
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
@@ -146,7 +129,6 @@ const EditListing = () => {
     }
   };
 
-  const { user } = useSelector((state) => state.user);
   const handleSubmitListing = async (e) => {
     e.preventDefault();
     try {
@@ -159,7 +141,7 @@ const EditListing = () => {
       if (+formData.regularPrice === 0)
         return toast.error('regular price cannot be zero');
       setLoading(true);
-      const res = await fetch(`api/listing/update/${params.id}`, {
+      const res = await fetch(`/api/listing/update/${params.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

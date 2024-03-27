@@ -3,17 +3,11 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-dotenv.config();
-
 import authRouter from './routes/authRoute.js';
 import userRouter from './routes/userRoute.js';
 import listingRouter from './routes/listingRoute.js';
 
-const app = express();
-
-app.use(express.json());
-
-app.use(cookieParser());
+dotenv.config();
 
 mongoose
   .connect(process.env.MONGO)
@@ -23,6 +17,12 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const app = express();
+
+app.use(express.json());
+
+app.use(cookieParser());
 
 app.listen(process.env.PORT, () => {
   console.log('server started on the right port😁');
