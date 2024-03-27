@@ -142,6 +142,33 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteListing = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Handle HTTP errors
+        throw new Error(data.message || 'Failed to delete listing');
+      }
+
+      if (data.success === false) {
+        // Handle API-level errors
+        throw new Error(data.message || 'Failed to delete listing');
+      }
+
+      setListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+      toast.success('Listing deleted successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'An error occurred while deleting listing');
+    }
+  };
+
   return (
     <div className="relative p-3 max-w-6xl mx-auto flex gap-6">
       <div className="w-1/3 flex flex-col justify-center ">
@@ -262,10 +289,17 @@ const Profile = () => {
                   <p>{listing.name}</p>
                 </Link>
                 <div className="flex items-center gap-4">
-                  <button className="font-bold text-white cursor-pointer bg-red-700 p-2 ">
+                  <button
+                    type="button"
+                    className="font-bold text-white cursor-pointer bg-red-700 p-2 "
+                  >
                     <FiEdit />
                   </button>
-                  <button className="font-bold text-white cursor-pointer bg-red-700 p-2 ">
+                  <button
+                    onClick={() => handleDeleteListing(listing._id)}
+                    type="button"
+                    className="font-bold text-white cursor-pointer bg-red-700 p-2 "
+                  >
                     <RiDeleteBinLine />
                   </button>
                 </div>
