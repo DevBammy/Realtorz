@@ -154,7 +154,7 @@ const EditListing = () => {
         setLoading(false);
       }
       navigate(`/listing/${data._id}`);
-      toast.success('Listing created succesfully! Redirecting...');
+      toast.success('Listing updated succesfully! Redirecting...');
       setLoading(false);
       navigate('/profile');
     } catch (error) {

@@ -57,3 +57,14 @@ export const getUserListings = async (req, res, next) => {
     return next(errorHandler(401, 'you can only view your own listings'));
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return next(errorHandler(401, 'User not found'));
+    const { password, ...others } = user._doc;
+    return res.status(200).json(others);
+  } catch (error) {
+    next(error);
+  }
+};
