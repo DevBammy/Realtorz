@@ -1,6 +1,7 @@
 # RealTorz (Real Estate App)
 
-This project is a full-stack real estate application built using React (with Vite) for the frontend and Node.js, Express, and MongoDB for the backend.
+This project is a full-stack real estate application built using React (with Vite) for the frontend and Node.js,
+Express, and MongoDB for the backend.
 
 ## Overview
 

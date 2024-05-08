@@ -2,31 +2,30 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+dotenv.config();
+const mongo = process.env.MONGO;
+const port = process.env.PORT || 5000;
 
 import authRouter from './routes/authRoute.js';
 import userRouter from './routes/userRoute.js';
 import listingRouter from './routes/listingRoute.js';
 
-dotenv.config();
-
 mongoose
-  .connect(process.env.MONGO)
+  .connect(mongo)
   .then(() => {
-    console.log('connected to Mongodb👌');
+    console.log('Connected to MongoDB');
   })
   .catch((err) => {
     console.log(err);
   });
 
 const app = express();
-
-app.use(express.json());
-
-app.use(cookieParser());
-
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
   console.log('server started on the right port😁');
 });
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
